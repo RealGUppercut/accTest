@@ -6,30 +6,29 @@ import { Accessibility } from "accessibility";
 export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
+      console.log("Initializing Accessibility...");
       window.accessibilityInstance = new Accessibility({
-        textToSpeechLang: "en-US",
+        textToSpeechLang: "en-US", // ✅ Ensure correct language
         modules: {
-          textToSpeech: true,
+          textToSpeech: true, // ✅ Enable TTS module
           speechToText: false,
         },
       });
 
       setTimeout(() => {
-        const voices = window.speechSynthesis.getVoices();
-        console.log("Available Voices:", voices);
+        console.log("Forcing textToSpeech ON...");
 
-        const selectedVoice =
-          voices.find((voice) => voice.lang === "en-US") ||
-          voices.find((voice) => voice.lang === "en-GB");
+        // ✅ Ensure textToSpeech is enabled in _stateValues
+        window.accessibilityInstance._stateValues.textToSpeech = true;
+        console.log(
+          "TTS state after forcing:",
+          window.accessibilityInstance._stateValues
+        );
 
-        if (selectedVoice) {
-          console.log("Using voice:", selectedVoice.name);
-          window.accessibilityInstance.options.textToSpeechVoice =
-            selectedVoice.name;
-        } else {
-          console.warn("No supported voices found.");
-        }
-      }, 1000); // ✅ Delay to ensure voices are loaded
+        // ✅ Refresh UI if needed
+        window.accessibilityInstance.menuInterface.toggleMenu(); // Close menu
+        window.accessibilityInstance.menuInterface.toggleMenu(); // Reopen menu
+      }, 1000); // ✅ Delay ensures Accessibility has fully initialized
     }
   }, []);
 
