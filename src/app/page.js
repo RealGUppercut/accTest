@@ -6,8 +6,7 @@ import { Accessibility } from "accessibility";
 export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
-      console.log("Initializing Accessibility...");
-      const instance = new Accessibility({
+      window.accessibilityInstance = new Accessibility({
         textToSpeechLang: "en-US",
         modules: {
           textToSpeech: true,
@@ -15,9 +14,22 @@ export default function Home() {
         },
       });
 
-      window.accessibilityInstance = instance;
-      console.log("Accessibility instance created:", instance);
-      console.log("Instance properties:", Object.keys(instance || {}));
+      setTimeout(() => {
+        const voices = window.speechSynthesis.getVoices();
+        console.log("Available Voices:", voices);
+
+        const selectedVoice =
+          voices.find((voice) => voice.lang === "en-US") ||
+          voices.find((voice) => voice.lang === "en-GB");
+
+        if (selectedVoice) {
+          console.log("Using voice:", selectedVoice.name);
+          window.accessibilityInstance.options.textToSpeechVoice =
+            selectedVoice.name;
+        } else {
+          console.warn("No supported voices found.");
+        }
+      }, 1000); // ✅ Delay to ensure voices are loaded
     }
   }, []);
 
@@ -25,18 +37,6 @@ export default function Home() {
     <main>
       <h1>Welcome</h1>
       <p>Select text and use the toolbar to activate Text-to-Speech.</p>
-      <button
-        onClick={() => {
-          if (window.accessibilityInstance) {
-            console.log("Triggering TTS...");
-            window.accessibilityInstance.menuInterface.textToSpeech();
-          } else {
-            console.error("Accessibility instance not initialized");
-          }
-        }}
-      >
-        Read Aloud
-      </button>
     </main>
   );
 }
