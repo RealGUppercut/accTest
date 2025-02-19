@@ -6,7 +6,7 @@ import { Accessibility } from "accessibility";
 export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
-      new Accessibility({
+      window.accessibilityInstance = new Accessibility({
         textToSpeechLang: "en-US",
         modules: {
           textToSpeech: true,
@@ -18,8 +18,19 @@ export default function Home() {
 
   return (
     <main>
-      <h1>Welcome to My Accessible Page</h1>
+      <h1>Welcome</h1>
       <p>Select text and use the toolbar to activate Text-to-Speech.</p>
+      <button
+        onClick={() => {
+          if (window.accessibilityInstance) {
+            window.accessibilityInstance.menuInterface.textToSpeech();
+          } else {
+            console.error("Accessibility instance not initialized");
+          }
+        }}
+      >
+        Read Aloud
+      </button>
     </main>
   );
 }
