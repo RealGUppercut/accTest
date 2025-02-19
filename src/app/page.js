@@ -6,15 +6,19 @@ import { Accessibility } from "accessibility";
 export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setTimeout(() => {
-        window.accessibilityInstance = new Accessibility({
-          textToSpeechLang: "en-US",
-          modules: {
-            textToSpeech: true,
-            speechToText: false,
-          },
-        });
-      }, 1000); // ⏳ Delay by 1 second
+      console.log("Initializing Accessibility...");
+      window.accessibilityInstance = new Accessibility({
+        textToSpeechLang: "en-US",
+        modules: {
+          textToSpeech: true,
+          speechToText: false,
+        },
+      });
+
+      console.log(
+        "Accessibility instance created:",
+        window.accessibilityInstance
+      );
     }
   }, []);
 
@@ -25,6 +29,7 @@ export default function Home() {
       <button
         onClick={() => {
           if (window.accessibilityInstance) {
+            console.log("Triggering TTS...");
             window.accessibilityInstance.menuInterface.textToSpeech();
           } else {
             console.error("Accessibility instance not initialized");
