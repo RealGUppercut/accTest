@@ -7,7 +7,7 @@ export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       console.log("Initializing Accessibility...");
-      window.accessibilityInstance = new Accessibility({
+      const instance = new Accessibility({
         textToSpeechLang: "en-US",
         modules: {
           textToSpeech: true,
@@ -15,10 +15,9 @@ export default function Home() {
         },
       });
 
-      console.log(
-        "Accessibility instance created:",
-        window.accessibilityInstance
-      );
+      window.accessibilityInstance = instance;
+      console.log("Accessibility instance created:", instance);
+      console.log("Instance properties:", Object.keys(instance || {}));
     }
   }, []);
 
