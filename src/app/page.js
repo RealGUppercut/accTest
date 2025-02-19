@@ -8,7 +8,7 @@ export default function Home() {
     if (typeof window !== "undefined") {
       console.log("Initializing Accessibility...");
       window.accessibilityInstance = new Accessibility({
-        textToSpeechLang: "en-US", // ✅ Ensure correct language
+        textToSpeechLang: "en-US", // ✅ Set correct language
         modules: {
           textToSpeech: true, // ✅ Enable TTS module
           speechToText: false,
@@ -18,19 +18,24 @@ export default function Home() {
       setTimeout(() => {
         console.log("Forcing textToSpeech ON...");
 
-        // ✅ Ensure textToSpeech is enabled in _stateValues
+        // ✅ Enable TTS in state without resetting Accessibility
         window.accessibilityInstance._stateValues.textToSpeech = true;
-        console.log(
-          "TTS state after forcing:",
-          window.accessibilityInstance._stateValues
-        );
+        window.accessibilityInstance.options.modules.textToSpeech = true;
 
-        // ✅ Proper way to refresh Accessibility UI
-        console.log("Reinitializing Accessibility to update UI...");
-        window.accessibilityInstance.destroy();
-        window.accessibilityInstance = new Accessibility(
-          window.accessibilityInstance.options
-        );
+        console.log("TTS enabled:", window.accessibilityInstance._stateValues);
+
+        // ✅ Refresh UI (if needed)
+        if (
+          window.accessibilityInstance.menuInterface &&
+          window.accessibilityInstance.menuInterface.textToSpeech
+        ) {
+          console.log("TTS function exists, Accessibility is ready.");
+        } else {
+          console.warn("TTS function missing, refreshing Accessibility...");
+          window.accessibilityInstance = new Accessibility(
+            window.accessibilityInstance.options
+          );
+        }
       }, 1000); // ✅ Delay ensures Accessibility has fully initialized
     }
   }, []);
