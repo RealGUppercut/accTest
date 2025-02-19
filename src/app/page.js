@@ -6,13 +6,15 @@ import { Accessibility } from "accessibility";
 export default function Home() {
   useEffect(() => {
     if (typeof window !== "undefined") {
-      window.accessibilityInstance = new Accessibility({
-        textToSpeechLang: "en-US",
-        modules: {
-          textToSpeech: true,
-          speechToText: false,
-        },
-      });
+      setTimeout(() => {
+        window.accessibilityInstance = new Accessibility({
+          textToSpeechLang: "en-US",
+          modules: {
+            textToSpeech: true,
+            speechToText: false,
+          },
+        });
+      }, 1000); // ⏳ Delay by 1 second
     }
   }, []);
 
