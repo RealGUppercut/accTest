@@ -25,9 +25,12 @@ export default function Home() {
           window.accessibilityInstance._stateValues
         );
 
-        // ✅ Refresh UI if needed
-        window.accessibilityInstance.menuInterface.toggleMenu(); // Close menu
-        window.accessibilityInstance.menuInterface.toggleMenu(); // Reopen menu
+        // ✅ Proper way to refresh Accessibility UI
+        console.log("Reinitializing Accessibility to update UI...");
+        window.accessibilityInstance.destroy();
+        window.accessibilityInstance = new Accessibility(
+          window.accessibilityInstance.options
+        );
       }, 1000); // ✅ Delay ensures Accessibility has fully initialized
     }
   }, []);
